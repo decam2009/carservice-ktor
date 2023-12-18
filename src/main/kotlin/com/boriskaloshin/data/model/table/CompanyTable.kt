@@ -1,4 +1,4 @@
-package com.boriskaloshin.model.table
+package com.boriskaloshin.data.model.table
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table

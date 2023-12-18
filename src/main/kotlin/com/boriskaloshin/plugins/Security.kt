@@ -1,46 +1,44 @@
 package com.boriskaloshin.plugins
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
+import com.boriskaloshin.data.repository.UserRepositoryImpl
+import com.boriskaloshin.auth.JwtService
+import com.boriskaloshin.data.model.RoleModel
+import com.boriskaloshin.data.model.UserModel
+import com.boriskaloshin.domain.usecase.UserUseCase
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
+import kotlinx.coroutines.runBlocking
 
-fun Application.configureSecurity() {
-    // Please read the jwt property from the config file if you are using EngineMain
-    val jwtAudience = "jwt-audience"
-    val jwtDomain = "https://jwt-provider-domain/"
-    val jwtRealm = "ktor sample app"
-    val jwtSecret = "secret"
-    authentication {
-        jwt {
-            realm = jwtRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(jwtSecret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(jwtDomain)
-                    .build()
+fun Application.configureSecurity(userUseCase: UserUseCase) {
+
+    runBlocking {
+        userUseCase.createUser(
+            UserModel(
+                id = 1,
+                email = "test@test.com",
+                login = "test@test.com",
+                password = "123",
+                firstName = "DemoName",
+                lastname = "DemoLastName",
+                phoneNumber = "+79222000000",
+                isActive = false,
+                role = RoleModel.CLIENT
             )
-            validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
+        )
+    }
+
+    authentication {
+        jwt("jwt") {
+            verifier(userUseCase.getJwtVerifier())
+            realm = "car-service-realm"
+            validate {
+                val payload = it.payload
+                val email = payload.getClaim("email").asString()
+                val user = userUseCase.findUserByEmail(email)
+                user
             }
         }
     }
-    data class MySession(val count: Int = 0)
-    install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
-        }
-    }
-    routing {
-        get("/session/increment") {
-                val session = call.sessions.get<MySession>() ?: MySession()
-                call.sessions.set(session.copy(count = session.count + 1))
-                call.respondText("Counter is ${session.count}. Refresh to increment.")
-            }
-    }
+
 }
