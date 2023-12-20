@@ -15,14 +15,14 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun getUserByEmail(email: String): UserModel? {
         return dbQuery {
+
             val join = Join(
                 CustomerTable,
                 UserTable,
                 onColumn = CustomerTable.id, otherColumn = UserTable.userCustomerId,
-                joinType = JoinType.LEFT,
-                additionalConstraint = ({ CustomerTable.customerEmail eq (email) })
+                joinType = JoinType.LEFT
             )
-            join.selectAll()
+            join.select {CustomerTable.customerEmail eq email}
                 .map { rowToUser(row = it) }
                 .singleOrNull()
         }
@@ -42,7 +42,6 @@ class UserRepositoryImpl : UserRepository {
                 table[userCustomerId] = CustomerTable.slice(CustomerTable.id.max()).selectAll() //myseq.nextIntVal() //Использование
                 // последовательности
                 table[userPassword] = user.password
-                table[isUserActive] = user.isActive
             }
         }
     }
@@ -54,14 +53,13 @@ class UserRepositoryImpl : UserRepository {
         }
 
         return UserModel(
-            id = row[UserTable.id],
+            id = row[CustomerTable.id],
             email = row[CustomerTable.customerEmail],
             login = row[CustomerTable.customerEmail],
             password = row[UserTable.userPassword],
             firstName = row[CustomerTable.customerFirstName],
             lastname = row[CustomerTable.customerSurname],
             phoneNumber = row[CustomerTable.customerPhoneNumber],
-            isActive = row[UserTable.isUserActive],
             role = row[CustomerTable.customerRole].getRoleByString()
         )
     }

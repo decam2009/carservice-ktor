@@ -24,19 +24,11 @@ class JwtService {
 
     //генерация токена
     fun generateToken(user: UserModel): String {
-        val join = Join(
-            UserTable,
-            CustomerTable,
-            onColumn = UserTable.userCustomerId, otherColumn = CustomerTable.id,
-            joinType = JoinType.LEFT
-        )
-        val email = join.selectAll().first()[CustomerTable.customerEmail]
-
         return JWT
             .create()
             .withSubject("car-service-subject")
             .withIssuer(issuer)
-            .withClaim("email", email)
+            .withClaim("email", user.email)
             .withExpiresAt(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC)) //время жизни 1 день
             .sign(algorithm)
     }

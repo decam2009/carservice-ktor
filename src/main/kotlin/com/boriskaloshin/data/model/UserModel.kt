@@ -10,7 +10,6 @@ class UserModel(
     val firstName: String,
     val lastname:String,
     val phoneNumber: String,
-    val isActive: Boolean = false,
     val role: RoleModel,
 ) : Principal {
 }

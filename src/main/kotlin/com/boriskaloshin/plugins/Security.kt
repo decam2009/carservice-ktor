@@ -12,22 +12,6 @@ import kotlinx.coroutines.runBlocking
 
 fun Application.configureSecurity(userUseCase: UserUseCase) {
 
-    runBlocking {
-        userUseCase.createUser(
-            UserModel(
-                id = 1,
-                email = "test@test.com",
-                login = "test@test.com",
-                password = "123",
-                firstName = "DemoName",
-                lastname = "DemoLastName",
-                phoneNumber = "+79222000000",
-                isActive = false,
-                role = RoleModel.CLIENT
-            )
-        )
-    }
-
     authentication {
         jwt("jwt") {
             verifier(userUseCase.getJwtVerifier())
