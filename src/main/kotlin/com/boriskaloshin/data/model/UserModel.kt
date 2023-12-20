@@ -1,7 +1,9 @@
 package com.boriskaloshin.data.model
 
 import io.ktor.server.auth.*
+import kotlinx.serialization.Serializable
 
+@Serializable
 class UserModel(
     val id: Int,
     val email: String,

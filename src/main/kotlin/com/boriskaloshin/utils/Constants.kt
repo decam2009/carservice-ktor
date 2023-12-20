@@ -11,5 +11,8 @@ class Constants {
         const val GENERAL = "Oh shit, something went wrong"
         const val WRONG_EMAIL = "Wrong email address"
         const val INCORRECT_PASSWORD = "Incorrect password"
+        const val COMPANY_CREATED_SUCCESSFULLY = "Company created successfully"
+        const val COMPANY_DELETED_SUCCESSFULLY = "Company deleted successfully"
+        const val COMPANY_NOT_FOUND = "Wrong company name"
     }
 }

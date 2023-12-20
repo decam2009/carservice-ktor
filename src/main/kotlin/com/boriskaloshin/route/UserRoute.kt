@@ -3,8 +3,8 @@ package com.boriskaloshin.route
 import com.boriskaloshin.auth.hash
 import com.boriskaloshin.data.model.UserModel
 import com.boriskaloshin.data.model.getRoleByString
-import com.boriskaloshin.data.model.request.SignUpRequest
-import com.boriskaloshin.data.model.request.SigninRequest
+import com.boriskaloshin.data.model.request.user.SignUpRequest
+import com.boriskaloshin.data.model.request.user.SigninRequest
 import com.boriskaloshin.data.model.responce.BaseResponce
 import com.boriskaloshin.domain.usecase.UserUseCase
 import com.boriskaloshin.utils.Constants

@@ -1,4 +1,4 @@
-package com.boriskaloshin.data.model.request
+package com.boriskaloshin.data.model.request.user
 
 import kotlinx.serialization.Serializable
 

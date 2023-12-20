@@ -1,7 +1,9 @@
 package com.boriskaloshin
 
 import com.boriskaloshin.auth.JwtService
+import com.boriskaloshin.data.repository.CompanyRepositoryImpl
 import com.boriskaloshin.data.repository.UserRepositoryImpl
+import com.boriskaloshin.domain.usecase.CompanyUseCase
 import com.boriskaloshin.domain.usecase.UserUseCase
 import com.boriskaloshin.plugins.*
 import com.boriskaloshin.plugins.DatabaseFactory.initializationDatabase
@@ -14,13 +16,15 @@ fun main(args: Array<String>) {
 fun Application.module() {
 
     val jwtService = JwtService()
-    val repository = UserRepositoryImpl()
-    val userUseCase = UserUseCase(repository, jwtService)
+    val repositoryUser = UserRepositoryImpl()
+    val repositoryCompany = CompanyRepositoryImpl()
+    val userUseCase = UserUseCase(repositoryUser, jwtService)
+    val companyUseCase = CompanyUseCase(repositoryCompany)
 
     initializationDatabase()
     configureMonitoring()
     configureSerialization()
     configureSecurity(userUseCase)
-    configureRouting(userUseCase)
+    configureRouting(userUseCase, companyUseCase)
     //configureHTTP()
 }
